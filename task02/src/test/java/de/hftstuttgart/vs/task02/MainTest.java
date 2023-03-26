@@ -13,7 +13,7 @@ class MainTest {
                 .log().all()
                 .port(7070).
         when().
-                get("").
+                get("/users").
         then().
                 log().all();
     }
@@ -25,7 +25,7 @@ class MainTest {
                 .log().all()
                 .port(7070).
         when().
-                get("").
+                get("/users/test").
         then().
                 log().all();
     }
@@ -37,7 +37,14 @@ class MainTest {
                 .log().all()
                 .port(7070).
         when().
-                get("").
+                body("""
+                        {
+                            "id": "test",
+                            "firstName": "Max",
+                            "lastName": "Mustermann"
+                        }
+                        """).
+                post("/users").
         then().
                 log().all();
     }
