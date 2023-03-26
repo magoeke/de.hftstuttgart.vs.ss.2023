@@ -1,8 +1,7 @@
 package de.hftstuttgart.vs.task02;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import io.javalin.Javalin;
 
@@ -18,9 +17,10 @@ public class Main {
     public record User(Object id, String firstName, String lastName) {}
 
     /**
-     * Why do we need a synchronized list?
+     * Why do we use ConcurrentHashMap?
+     * find a better type for Object (see description above)
      */
-    private final List<User> users = Collections.synchronizedList(new ArrayList<>());
+    private static final Map<Object, User> users = new ConcurrentHashMap<>();
 
     /**
      * Develop a rest api which can execute the following tasks:
@@ -31,6 +31,7 @@ public class Main {
      * Beside developing the functionalities you should also define the endpoints.
      *
      * Further Information about http status codes: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+     * More information about javalin: https://javalin.io/documentation#context
      *
      * @param args can be ignored
      */
