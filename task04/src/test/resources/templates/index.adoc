@@ -1,0 +1,9 @@
+= Invoice Manager
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+include::all_invoices.adoc[]

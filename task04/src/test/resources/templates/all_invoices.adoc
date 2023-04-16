@@ -1,0 +1,24 @@
+This endpoint returns all invoices. There is no way to change the order of the elements.
+It uses pagination by default. The default values are `1` for `offset` and `5` for `limit`. This gives you the first page which contains 5 invoices.
+
+To navigate through the invoices you can use the provided HATEOAS links.
+
+=== Request structure
+
+include::{snippets}/should_return_invoices/http-request.adoc[]
+
+=== Response fields
+
+include::{snippets}/should_return_invoices/response-fields.adoc[]
+
+=== Response links
+
+include::{snippets}/should_return_invoices/links.adoc[]
+
+=== Example response
+
+include::{snippets}/should_return_invoices/http-response.adoc[]
+
+=== CURL request
+
+include::{snippets}/should_return_invoices/curl-request.adoc[]
