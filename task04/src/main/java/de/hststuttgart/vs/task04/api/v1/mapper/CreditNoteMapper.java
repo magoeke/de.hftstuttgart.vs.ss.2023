@@ -9,7 +9,6 @@ import de.hststuttgart.vs.task04.api.v1.InvoiceAPI;
 import de.hststuttgart.vs.task04.api.v1.models.CreditNoteDO;
 import de.hststuttgart.vs.task04.bm.model.CreditNote;
 
-
 public class CreditNoteMapper {
 
     public static CreditNoteDO map(final CreditNote creditNote) {
@@ -24,8 +23,13 @@ public class CreditNoteMapper {
         creditNoteDO.setCustomer(creditNote.getCustomer());
         creditNoteDO.setReason(creditNote.getReason());
 
-        // TODO 02: Add a self rel and one that links to the original invoice
-
+        creditNoteDO
+                .add(WebMvcLinkBuilder
+                        .linkTo(methodOn(InvoiceAPI.class).getInvoice(creditNote.getInvoiceId()))
+                        .withRel("show:original-invoice"))
+                .add(WebMvcLinkBuilder
+                        .linkTo(methodOn(CreditNotesAPI.class).getCreditNote(creditNote.getCreditNoteId()))
+                        .withSelfRel());
 
         return creditNoteDO;
     }

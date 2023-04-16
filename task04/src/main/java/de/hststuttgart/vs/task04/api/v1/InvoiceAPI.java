@@ -47,9 +47,11 @@ public class InvoiceAPI {
 
             final var invoices = new Invoices();
             invoices.setInvoices(mappedInvoices);
-            // TODO 01: Add self, next and previous link
-            // next should only be displayed if there is a next page
-            // previous should only be displayed if it isn't the first page
+
+            invoices
+                    .add(linkTo(methodOn(InvoiceAPI.class).getInvoices(offset, limit)).withSelfRel())
+                    .addIf(pagedInvoices.hasNext(), () -> linkTo(methodOn(InvoiceAPI.class).getInvoices(offset + 1, limit)).withRel("next"))
+                    .addIf(pagedInvoices.hasPrevious(), () -> linkTo(methodOn(InvoiceAPI.class).getInvoices(offset - 1, limit)).withRel("previous"));
 
             return ResponseEntity.ok(invoices);
         } catch (final InvalidOffset e) {

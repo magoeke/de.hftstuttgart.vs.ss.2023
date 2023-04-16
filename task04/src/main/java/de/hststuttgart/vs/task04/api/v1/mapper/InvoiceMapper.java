@@ -21,7 +21,19 @@ public class InvoiceMapper {
         invoiceDO.setTotalGrossAmount(invoice.getTotalGrossAmount());
         invoiceDO.setCustomer(invoice.getCustomer());
 
-        // TODO 03: Add self rel and one rel to either create a credit note or return a list of credit notes
+        invoiceDO
+                .add(WebMvcLinkBuilder
+                        .linkTo(methodOn(InvoiceAPI.class).getInvoice(invoice.getInvoiceId()))
+                        .withSelfRel())
+                .addIf(
+                        invoice.isCreditNotePossible(),
+                        () -> linkTo(methodOn(InvoiceAPI.class).createCreditNote(
+                                invoice.getInvoiceId(),
+                                null)).withRel("create:full-credit-note"))
+                .addIf(
+                        !invoice.getCreditNotes().isEmpty(),
+                        () -> linkTo(methodOn(InvoiceAPI.class).getCreditNotes(invoice.getInvoiceId()))
+                                .withRel("show:credit-notes"));
 
         return invoiceDO;
     }
