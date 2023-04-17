@@ -134,6 +134,7 @@ class InvoiceAPITest {
                         ),
                         responseFields(
                                 fieldWithPath("invoices").description("Array that contains all invoices"),
+                                fieldWithPath("invoices[].invoiceId").description("Id of an invoice"),
                                 subsectionWithPath("_links").description("Link to resources")
                         )
                 ));
