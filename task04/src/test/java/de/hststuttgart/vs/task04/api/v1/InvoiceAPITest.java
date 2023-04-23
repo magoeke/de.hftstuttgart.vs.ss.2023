@@ -39,6 +39,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import de.hststuttgart.vs.task04.api.v1.models.Customer;
 import de.hststuttgart.vs.task04.bm.InvoiceController;
+import de.hststuttgart.vs.task04.bm.exceptions.InvoiceNotFound;
+import de.hststuttgart.vs.task04.bm.model.CreditNote;
 import de.hststuttgart.vs.task04.bm.model.Invoice;
 import de.hststuttgart.vs.task04.bm.model.PagedInvoices;
 
@@ -134,6 +136,13 @@ class InvoiceAPITest {
                         ),
                         responseFields(
                                 fieldWithPath("invoices").description("Array that contains all invoices"),
+                                fieldWithPath("invoices[].invoiceId").description("ID of an invoice"),
+                                fieldWithPath("invoices[].orderId").description("ID of the order that caused this invoice"),
+                                fieldWithPath("invoices[].totalNetAmount").description("Total net amount of invoice"),
+                                fieldWithPath("invoices[].totalTaxAmount").description("Total tax amount of invoice"),
+                                fieldWithPath("invoices[].totalGrossAmount").description("Total gross amount of invoice"),
+                                subsectionWithPath("invoices[].customer").description("Contains information about customer"),
+                                subsectionWithPath("invoices[]._links").description("Link to resources for specific invoice"),
                                 subsectionWithPath("_links").description("Link to resources")
                         )
                 ));
@@ -141,12 +150,95 @@ class InvoiceAPITest {
 
     // TODO 05 add a test for /invoices/[invoiceId}
     // The endpoint should return an invoice that can be refunded (credit note creation is possible)
+    @Test
+    void should_return_invoice_that_can_be_refunded() throws Exception {
+        // We mock the Object so that we can test it easier
+        final var johnDoe = new Customer().firstname("John").lastname("Doe");
+
+        final var invoice = new Invoice()
+                .invoiceId("2023-04-16-0001")
+                .orderId("c082bcbf-550a-4b10-baeb-4047957f70a2")
+                .totalNetAmount(BigDecimal.valueOf(9.34))
+                .totalTaxAmount(BigDecimal.valueOf(0.65))
+                .totalGrossAmount(BigDecimal.valueOf(9.99))
+                .customer(johnDoe)
+                .creditNotePossible(true)
+                .creditNotes(new ArrayList<>());
+
+        Mockito.doReturn(invoice).when(invoiceController).getInvoice("2023-04-16-0001");
+
+        this.mockMvc.perform(get("/invoices/2023-04-16-0001"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(documentationHandler.document(
+                        links(
+                                halLinks(),
+                                linkWithRel("self").description("Link to this resource"),
+                                linkWithRel("ex:invoice-credit-notes").description("Link to create credit note")
+                        ),
+                        responseFields(
+                                fieldWithPath("invoiceId").description("ID of an invoice"),
+                                fieldWithPath("orderId").description("ID of the order that caused this invoice"),
+                                fieldWithPath("totalNetAmount").description("Total net amount of invoice"),
+                                fieldWithPath("totalTaxAmount").description("Total tax amount of invoice"),
+                                fieldWithPath("totalGrossAmount").description("Total gross amount of invoice"),
+                                subsectionWithPath("customer").description("Contains information about customer"),
+                                subsectionWithPath("_links").description("Link to resources")
+                        )
+                ));
+    }
 
     // TODO 06 add a test for /invoices/[invoiceId}
-    // The endpoint should return an invoice that can't be refunded (credit note already exists)
+    @Test
+    void should_return_invoice_that_is_already_refunded() throws Exception {
+        // We mock the Object so that we can test it easier
+        final var johnDoe = new Customer().firstname("John").lastname("Doe");
+
+        final var invoice = new Invoice()
+                .invoiceId("2023-04-16-0001")
+                .orderId("c082bcbf-550a-4b10-baeb-4047957f70a2")
+                .totalNetAmount(BigDecimal.valueOf(9.34))
+                .totalTaxAmount(BigDecimal.valueOf(0.65))
+                .totalGrossAmount(BigDecimal.valueOf(9.99))
+                .customer(johnDoe)
+                .creditNotePossible(false)
+                .creditNotes(List.of(new CreditNote()));
+
+        Mockito.doReturn(invoice).when(invoiceController).getInvoice("2023-04-16-0002");
+
+        this.mockMvc.perform(get("/invoices/2023-04-16-0002"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(documentationHandler.document(
+                        links(
+                                halLinks(),
+                                linkWithRel("self").description("Link to this resource"),
+                                linkWithRel("show:credit-notes").description("Link to show all credit notes")
+                        ),
+                        responseFields(
+                                fieldWithPath("invoiceId").description("ID of an invoice"),
+                                fieldWithPath("orderId").description("ID of the order that caused this invoice"),
+                                fieldWithPath("totalNetAmount").description("Total net amount of invoice"),
+                                fieldWithPath("totalTaxAmount").description("Total tax amount of invoice"),
+                                fieldWithPath("totalGrossAmount").description("Total gross amount of invoice"),
+                                subsectionWithPath("customer").description("Contains information about customer"),
+                                subsectionWithPath("_links").description("Link to resources")
+                        )
+                ));
+    }
 
     // TODO 07 add a test for /invoices/[invoiceId}
     // The endpoint should return no invoce (not found)
+    @Test
+    void should_return_no_invoice_when_id_is_unkonw() throws Exception {
+        Mockito.doThrow(InvoiceNotFound.class).when(invoiceController).getInvoice("2023-04-16-0003");
 
+        this.mockMvc.perform(get("/invoices/2023-04-16-0003"))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andDo(documentationHandler.document(
+
+                ));
+    }
 
 }

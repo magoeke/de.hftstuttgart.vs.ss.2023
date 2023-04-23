@@ -2,6 +2,7 @@ package de.hststuttgart.vs.task04.api.v1.mapper;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import org.springframework.hateoas.mediatype.hal.HalLinkRelation;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 
 import de.hststuttgart.vs.task04.api.v1.CreditNotesAPI;
@@ -26,7 +27,7 @@ public class CreditNoteMapper {
         creditNoteDO
                 .add(WebMvcLinkBuilder
                         .linkTo(methodOn(InvoiceAPI.class).getInvoice(creditNote.getInvoiceId()))
-                        .withRel("show:original-invoice"))
+                        .withRel(HalLinkRelation.curied("ex", "invoice")))
                 .add(WebMvcLinkBuilder
                         .linkTo(methodOn(CreditNotesAPI.class).getCreditNote(creditNote.getCreditNoteId()))
                         .withSelfRel());

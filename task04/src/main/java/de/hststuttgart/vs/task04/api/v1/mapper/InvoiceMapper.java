@@ -3,6 +3,7 @@ package de.hststuttgart.vs.task04.api.v1.mapper;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import org.springframework.hateoas.mediatype.hal.HalLinkRelation;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 
 import de.hststuttgart.vs.task04.api.v1.InvoiceAPI;
@@ -29,7 +30,8 @@ public class InvoiceMapper {
                         invoice.isCreditNotePossible(),
                         () -> linkTo(methodOn(InvoiceAPI.class).createCreditNote(
                                 invoice.getInvoiceId(),
-                                null)).withRel("create:full-credit-note"))
+                                null))
+                                .withRel(HalLinkRelation.curied("ex", "invoice-credit-notes")))
                 .addIf(
                         !invoice.getCreditNotes().isEmpty(),
                         () -> linkTo(methodOn(InvoiceAPI.class).getCreditNotes(invoice.getInvoiceId()))
