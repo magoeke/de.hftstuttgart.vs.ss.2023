@@ -3,6 +3,7 @@ package de.hststuttgart.vs.task04.api.v1;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.hststuttgart.vs.task04.api.v1.mapper.CreditNoteMapper;
 import de.hststuttgart.vs.task04.api.v1.mapper.InvoiceMapper;
+import de.hststuttgart.vs.task04.api.v1.models.CreditNoteDO;
 import de.hststuttgart.vs.task04.api.v1.models.FullCreditNoteRequest;
+import de.hststuttgart.vs.task04.api.v1.models.InvoiceDO;
 import de.hststuttgart.vs.task04.api.v1.models.Invoices;
 import de.hststuttgart.vs.task04.bm.InvoiceController;
 import de.hststuttgart.vs.task04.bm.exceptions.CreditNoteAlreadyExists;
@@ -35,7 +38,7 @@ public class InvoiceAPI {
     }
 
     @GetMapping
-    public ResponseEntity getInvoices(
+    public ResponseEntity<Invoices> getInvoices(
             @RequestParam(defaultValue = "1") final int offset,
             @RequestParam(defaultValue = "5") final int limit
     ) {
@@ -63,7 +66,7 @@ public class InvoiceAPI {
     }
 
     @GetMapping("/{invoiceId}")
-    public ResponseEntity getInvoice(@PathVariable("invoiceId") final String invoiceId) {
+    public ResponseEntity<InvoiceDO> getInvoice(@PathVariable("invoiceId") final String invoiceId) {
         try {
             final var invoice = invoiceController.getInvoice(invoiceId);
             final var mappedInvoice = InvoiceMapper.map(invoice);
@@ -75,7 +78,7 @@ public class InvoiceAPI {
     }
 
     @PostMapping("/{invoiceId}/full-credit-notes")
-    public ResponseEntity createCreditNote(
+    public ResponseEntity<CreditNoteDO> createCreditNote(
             @PathVariable("invoiceId") final String invoiceId,
             @RequestBody final FullCreditNoteRequest fullCreditNoteRequest) {
         try {
@@ -92,7 +95,7 @@ public class InvoiceAPI {
     }
 
     @GetMapping("/{invoiceId}/credit-notes")
-    public ResponseEntity getCreditNotes(@PathVariable("invoiceId") final String invoiceId) {
+    public ResponseEntity<List<CreditNoteDO>> getCreditNotes(@PathVariable("invoiceId") final String invoiceId) {
         try {
             final var creditNotes = invoiceController.getCreditNotes(invoiceId);
             final var mappedCreditNotes = creditNotes.stream().map(CreditNoteMapper::map).toList();
