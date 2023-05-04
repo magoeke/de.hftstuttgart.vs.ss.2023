@@ -1,0 +1,11 @@
+type Query {
+    helloWorld: HelloWorld!
+}
+
+type HelloWorld {
+    message: String
+}
+
+# TODO 1: Add type definitions for the blog service
+
+# TODO 2: Add queries and mutations with the corresponding parameters and return types
