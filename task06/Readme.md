@@ -8,6 +8,15 @@ Right now the project only provides a Hello World example for GraphQL.
 
 You can access GraphiQL with the url [http://localhost:8080/graphiql](http://localhost:8080/graphiql).
 
+You can use this query for the hello world example:
+```
+query helloWorld {
+  helloWorld {
+    message
+  }
+}
+```
+
 # Task 06
 
 Let's develop a simple blog service. It's possible to create, update and delete posts. Not every post is
