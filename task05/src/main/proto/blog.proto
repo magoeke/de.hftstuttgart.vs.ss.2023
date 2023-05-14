@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option java_multiple_files = true;
+option java_package = "de.hftstuttgart.vs";
+option java_outer_classname = "BlogPostProto";
+option objc_class_prefix = "HLW";
+
+package blog;
+
+service BlogPostService {
+  rpc GetBlogPosts (google.protobuf.Empty) returns (stream BlogPost) {}
+  rpc CreateBlogPost (BlogPostRequest) returns (BlogPost) {}
+  rpc UpdateBlogPost (BlogPostId) returns (google.protobuf.Empty) {}
+  rpc LockBlogPost (BlogPostId) returns (google.protobuf.Empty) {}
+  rpc DeleteBlogPost (BlogPostId) returns (google.protobuf.Empty) {}
+  rpc AddComment (CommentRequest) returns (Comment) {}
+  rpc GetCommentsForBlogPost (BlogPostId) returns (stream Comment) {}
+  rpc DeleteComment (CommentId) returns (google.protobuf.Empty) {}
+}
+
+enum BlogPostStatus {
+  DRAFT = 0;
+  PUBLISHED = 1;
+}
+
+message BlogPostId {
+  int64 blogPostId = 1;
+}
+
+message BlogPostRequest {
+  int64 authorId = 1;
+  BlogPostStatus blogPostStatus = 2;
+  bool locked = 3;
+  string content = 4;
+}
+
+message BlogPost {
+  int64 authorId = 1;
+  BlogPostStatus blogPostStatus = 2;
+  bool locked = 3;
+  string content = 4;
+  int64 blogPostId = 5;
+}
+
+message CommentId {
+  int64 blogPostId = 1;
+  int64 commentId = 2;
+}
+
+message CommentRequest {
+  int64 blogPostId = 1;
+  int64 authorId = 2;
+  string content = 3;
+}
+
+message Comment {
+  int64 commentId = 1;
+  int64 authorId = 2;
+  string content = 3;
+}
