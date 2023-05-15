@@ -93,7 +93,8 @@ public class BlogController implements UserRepository, PostRepository {
     }
 
     public int getCommentCount(final int postID) {
-        throw new RuntimeException("NOT IMPLEMENTED");
         //TODO 4: implement method counting the comments for a post
+        final var post = posts.get(postID);
+        return post != null ? post.getComments().size() : 0;
     }
 }

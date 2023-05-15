@@ -1,11 +1,50 @@
-type Query {
-    helloWorld: HelloWorld!
-}
-
-type HelloWorld {
-    message: String
-}
+#type Query {
+#    helloWorld: HelloWorld!
+#}
+#
+#type HelloWorld {
+#    message: String
+#}
 
 # TODO 1: Add type definitions for the blog service
+type Post {
+    postID: Int!
+    text: String!
+    state: PostState!
+    user: User!
+    commentCount: Int!
+    comments: [Comment!]!
+}
+
+enum PostState {
+    PUBLISHED, UNPUBLISHED, LOCKED
+}
+
+type User {
+    userName: String!
+    firstName: String
+    lastName: String
+}
+
+type Comment {
+    text: String!
+    user: User!
+}
 
 # TODO 2: Add queries and mutations with the corresponding parameters and return types
+input CommentInput {
+    text: String!
+    userName: String!
+}
+
+type Query {
+    posts: [Post!]!
+}
+
+type Mutation {
+    addPost(text: String!, userName: String!): Post
+    deletePost(postID: Int!): Post
+    editPost(postID: Int!, text: String!): Post
+    addComment(postID: Int!, comment: CommentInput!): Comment
+    changePostState(postID: Int!, state: PostState!): Post
+}
