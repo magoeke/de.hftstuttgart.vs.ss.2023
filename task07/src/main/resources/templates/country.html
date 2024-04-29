@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title th:text="${country.name}+' - World Information System'">Country - World Information System</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<div style="display: flex; align-items: start; justify-content: space-between;">
+    <div>
+        <h1 th:text="${country.name}"></h1>
+    </div>
+    <!-- From https://github.com/trevorblades/countries/blob/main/src/locales.ts -->
+    <div th:with="langs = ${ {'en', 'de', 'es', 'fa', 'fr', 'it', 'ja', 'nl', 'pl', 'pt', 'ru', 'tr', 'vi', 'zh'} }">
+        <label for="lang-select">Select language</label>
+        <select id="lang-select" onchange="changeLang(this)">
+            <option th:each="language : ${langs}" th:text="${language}" th:selected="${lang == language}">lang</option>
+        </select>
+    </div>
+</div>
+<h2 th:text="'Capital: ' + ${country.capital}"></h2>
+<h2>Languages</h2>
+<div>
+    <ul>
+        <li th:each="language : ${country.languages}" th:text="${language.name}"></li>
+    </ul>
+</div>
+<h2>Currencies</h2>
+<div>
+    <ul>
+        <li th:each="currency : ${country.currencies}">
+            <a th:href="@{/currencies/{currency}(currency=${currency})}" th:text="${currency}"></a>
+        </li>
+    </ul>
+</div>
+<h2>Phone Prefix</h2>
+<div>
+    <ul>
+        <li th:each="phone : ${country.phones}" th:text="'+' + ${phone}"></li>
+    </ul>
+</div>
+<h2>Flag</h2>
+<span style="font-size: xxx-large" th:text="${country.emoji}"></span>
+</body>
+</html>
+
+<script>
+    function changeLang(option) {
+        const lang = option.options[option.selectedIndex].value;
+        window.location.href = `?lang=${lang}`
+    }
+</script>

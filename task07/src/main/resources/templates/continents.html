@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title>All Continents - World Information System</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h1>All continents</h1>
+<div>
+    <ul>
+        <li th:each="continent : ${continents}">
+            <a th:href="@{/continents/{continentCode}(continentCode=${continent.code})}" th:text="*{continent.name}"></a>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,6 @@
+schema: schema.graphqls
+documents: '**/*.graphql'
+extensions:
+  endpoints:
+    trevorblades:
+      url: 'https://countries.trevorblades.com/graphql'

@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <title th:text="'Countries paying in ' + ${currency} + ' - World Information System'">Countries paying in - World Information System</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h1 th:text="'Countries paying in ' + ${currency}">Currency:</h1>
+<div>
+    <ul>
+        <li th:each="country : ${countries}">
+            <a th:href="@{/countries/{countryCode}(countryCode=${country.code})}" th:text="*{country.name}"></a>
+        </li>
+    </ul>
+</div>
+</body>
+</html>
