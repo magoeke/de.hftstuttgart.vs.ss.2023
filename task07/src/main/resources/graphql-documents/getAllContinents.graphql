@@ -1,1 +1,6 @@
-# TODO add query
+query getAllContinents {
+    continents {
+        name
+        code
+    }
+}

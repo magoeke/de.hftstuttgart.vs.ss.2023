@@ -14,12 +14,6 @@ import reactor.core.publisher.Mono;
 @Service
 public class CountryClient {
 
-    /*
-      TODO:
-      1. Add query document names
-      2. Assign variables as needed in the query document
-    */
-
     private final GraphQlClient graphQlClient;
 
     public CountryClient() {
@@ -28,25 +22,33 @@ public class CountryClient {
     }
 
     public Mono<Country> getCountryByCountryCode(final String countryCode, final String lang) {
-        return graphQlClient.documentName("TODO").variable("TODO", "TODO").retrieve("country").toEntity(Country.class);
+        return graphQlClient
+                .documentName("getCountry")
+                .variable("countryCode", countryCode)
+                .variable("lang", lang)
+                .retrieve("country")
+                .toEntity(Country.class);
     }
 
     public Mono<List<Country>> getCountriesByCurrency(final String currency) {
         return graphQlClient
-                .documentName("TODO")
-                .variable("TODO", "TODO")
+                .documentName("getAllCountriesWithCurrency")
+                .variable("currency", currency)
                 .retrieve("countries")
                 .toEntityList(Country.class);
     }
 
     public Mono<List<Continent>> getAllContinents() {
-        return graphQlClient.documentName("TODO").retrieve("continents").toEntityList(Continent.class);
+        return graphQlClient
+                .documentName("getAllContinents")
+                .retrieve("continents")
+                .toEntityList(Continent.class);
     }
 
     public Mono<Continent> getContinentByCodeWithCountries(final String code) {
         return graphQlClient
-                .documentName("TODO")
-                .variable("TODO", "TODO")
+                .documentName("getContinentWithCountries")
+                .variable("continentCode", code)
                 .retrieve("continent")
                 .toEntity(Continent.class);
     }

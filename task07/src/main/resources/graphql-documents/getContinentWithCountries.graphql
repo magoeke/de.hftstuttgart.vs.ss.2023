@@ -1,1 +1,10 @@
-# TODO add query
+query getContinentWithCountries($continentCode: ID!) {
+    continent(code: $continentCode) {
+        name
+        code
+        countries {
+            name
+            code
+        }
+    }
+}

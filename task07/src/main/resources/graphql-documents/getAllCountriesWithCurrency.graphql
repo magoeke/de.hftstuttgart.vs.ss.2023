@@ -1,1 +1,6 @@
-# TODO add query
+query getAllCountriesWithCurrency($currency: String!) {
+    countries(filter: {currency: {regex: $currency}}) {
+        code
+        name
+    }
+}

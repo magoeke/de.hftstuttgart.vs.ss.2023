@@ -1,1 +1,13 @@
-# TODO add query
+query getCountry($countryCode: ID!, $lang: String) {
+    country(code: $countryCode) {
+        name(lang: $lang)
+        capital
+        emoji
+        languages {
+            name
+            code
+        }
+        currencies
+        phones
+    }
+}
